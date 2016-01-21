@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS", "LMS\LMS.csproj", "{4D1051C9-A3EC-4E2A-B6C1-6487FD69D65E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.Tests", "LMS.Tests\LMS.Tests.csproj", "{79184646-DEBA-447C-AECA-EFB7C092400A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D1051C9-A3EC-4E2A-B6C1-6487FD69D65E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D1051C9-A3EC-4E2A-B6C1-6487FD69D65E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D1051C9-A3EC-4E2A-B6C1-6487FD69D65E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D1051C9-A3EC-4E2A-B6C1-6487FD69D65E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79184646-DEBA-447C-AECA-EFB7C092400A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79184646-DEBA-447C-AECA-EFB7C092400A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79184646-DEBA-447C-AECA-EFB7C092400A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79184646-DEBA-447C-AECA-EFB7C092400A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
