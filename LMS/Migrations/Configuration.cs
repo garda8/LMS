@@ -1,5 +1,8 @@
 namespace LMS.Migrations
 {
+    using LMS.Models;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -15,18 +18,16 @@ namespace LMS.Migrations
         protected override void Seed(LMS.Models.ApplicationDbContext context)
         {
             
-            //  This method will be called after migrating to the latest version.
+            if (!context.Users.Any(u=>u.UserName=="gustav"))
+            {
+                var store = new UserStore<ApplicationUser>(context);
+                var manager = new UserManager<ApplicationUser>(store);
+                var user = new ApplicationUser { UserName = "gustav", Email="erik.lovbom@yahoo.se" };
+                manager.Create(user, "password");
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+
+
+            }
         }
     }
 }
