@@ -5,7 +5,11 @@ using System.Web;
 
 namespace LMS.Models
 {
-    public class User
+    public class User : ApplicationUser
     {
+        
+        String Name { get; set; }
+
+        public virtual ICollection<Klass> Klasser { get; set; }
     }
 }

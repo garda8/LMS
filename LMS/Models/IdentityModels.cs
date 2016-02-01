@@ -22,12 +22,18 @@ namespace LMS.Models
     {
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
-        {
+        {       
         }
 
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
         }
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Klass> Klasser { get; set; }
+        public DbSet<schemaOccasion> occasions { get; set; }
+        
+        
     }
 }
