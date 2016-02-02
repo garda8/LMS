@@ -8,7 +8,7 @@ namespace LMS.Models
     public class User : ApplicationUser
     {
         
-        String Name { get; set; }
+        public String Name { get; set; }
 
         public virtual ICollection<Klass> Klasser { get; set; }
     }

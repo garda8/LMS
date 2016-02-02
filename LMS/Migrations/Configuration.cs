@@ -8,6 +8,7 @@ namespace LMS.Migrations
     using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.AspNet.Identity;
 
+
     internal sealed class Configuration : DbMigrationsConfiguration<LMS.Models.ApplicationDbContext>
     {
         public Configuration()
@@ -15,23 +16,47 @@ namespace LMS.Migrations
             AutomaticMigrationsEnabled = true;
         }
 
+        bool AddUserAndRole(LMS.Models.ApplicationDbContext context)
+        {
+            IdentityResult ir;
+            var rm = new RoleManager<IdentityRole>
+                (new RoleStore<IdentityRole>(context));
+            //ir = rm.Create(new IdentityRole("canEdit"));
+            
+            var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            
+            var user = new User { UserName = "lisa", Email = "lisa@gmail.com" };
+            
+            ir = um.Create(user, "password");
+            
+            if (ir.Succeeded == false)
+                return ir.Succeeded;
+            ir = um.AddToRole(user.Id, "student");
+            return ir.Succeeded;
+        }
+        
         protected override void Seed(LMS.Models.ApplicationDbContext context)
         {
 
-            /*context.Klasser.AddOrUpdate(
-                new Klass { Name = "Kemi A-kurs", TeacherId = "fe63124e-882a-4e0a-a441-ca768bb0539d", startDate = DateTime.Now, sharedFolder="shared", submitFolder="submit" },
-                new Klass { Name = "Kemi B-kurs", TeacherId = "fe63124e-882a-4e0a-a441-ca768bb0539d", startDate = DateTime.Now, sharedFolder = "shared", submitFolder = "submit" }
+            /*
+            context.Klasser.AddOrUpdate(
+                new Klass { Name = "Kemi A-kurs", startDate = DateTime.Now, sharedFolder="shared", submitFolder="submit" },
+                new Klass { Name = "Kemi B-kurs", startDate = DateTime.Now, sharedFolder = "shared", submitFolder = "submit" }
             );
             context.SaveChanges();
             */
 
-            if (!context.Users.Any(u => u.UserName == "erik"))
+            AddUserAndRole(context);
+            /*
+            if (!context.Users.Any(u => u.UserName == "anna"))
             {
                 var store = new UserStore<ApplicationUser>(context);
                 var manager = new UserManager<ApplicationUser>(store);
-                var user = new User { UserName = "erik", Email = "erik.lovbom@studentconsulting.com" };
+                var user = new User { UserName = "anna", Email = "anna@gmail.com" };
                 manager.Create(user, "password");
-            }
+            }*/
+
+
 
             /*if (!context.Users.Any(u => u.UserName == "erik.lovbom"))
             {

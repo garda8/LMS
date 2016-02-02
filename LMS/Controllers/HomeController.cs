@@ -30,7 +30,10 @@ namespace LMS.Controllers
         {
             ViewBag.Message = "Your application description page.";
             //object id = Membership.GetUser().ProviderUserKey;
-            String userId = new Repository().getUserId();
+
+            //Denna funkar också. Ville bara använda User.Identity.GetUserId(), då den är enklare att förstå.
+            //String userId = new Repository().getUserId();  
+            String userId = User.Identity.GetUserId();
 
             ViewBag.userId = userId;
             ViewBag.userRole = "";
