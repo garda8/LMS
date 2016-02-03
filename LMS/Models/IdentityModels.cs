@@ -30,6 +30,7 @@ namespace LMS.Models
             return new ApplicationDbContext();
         }
 
+        
         public DbSet<User> Users { get; set; }
         public DbSet<Klass> Klasser { get; set; }
         public DbSet<schemaOccasion> occasions { get; set; }

@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using LMS.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace LMS.Controllers
 {
@@ -145,23 +146,27 @@ namespace LMS.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model, String userRole)
         {
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = model.UserName, Email = model.Email };
+                var user = new User { Name = model.Name, UserName = model.UserName, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    var context = new ApplicationDbContext();
+                    var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                    um.AddToRole(user.Id,userRole);
+
 
                     return RedirectToAction("Index", "Home");
                 }

@@ -17,6 +17,12 @@ namespace LMS.Controllers
     {
 
         private ApplicationUserManager _userManager;
+
+        /*public ActionResult Start()
+        {
+
+            
+        }*/
         
         public ActionResult Index()
         {
@@ -66,5 +72,7 @@ namespace LMS.Controllers
                 _userManager = value;
             }
         }
+
+        
     }
 }

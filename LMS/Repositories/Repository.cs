@@ -13,13 +13,11 @@ using LMS.Models;
 
 
 using System.Collections.Generic;
-using System.Linq;
+
 //using System.Web;
 //using Microsoft.AspNet.Identity;
 //using System.Web.Security;
 
-using Microsoft.AspNet.Identity;
-using System.Security.Claims;
 using LMS.Controllers;
 
 namespace LMS.Repositories

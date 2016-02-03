@@ -19,13 +19,12 @@ namespace LMS.Migrations
         bool AddUserAndRole(LMS.Models.ApplicationDbContext context)
         {
             IdentityResult ir;
-            var rm = new RoleManager<IdentityRole>
-                (new RoleStore<IdentityRole>(context));
+            var rm = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             //ir = rm.Create(new IdentityRole("canEdit"));
             
             var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             
-            var user = new User { UserName = "lisa", Email = "lisa@gmail.com" };
+            var user = new User { Name = "Rolf",  UserName = "rolf", Email = "rolf@gmail.com" };
             
             ir = um.Create(user, "password");
             

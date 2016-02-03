@@ -25,10 +25,10 @@ namespace LMS.Models
         [MaxLength(30)]
         public string Name { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(255)]
         public string sharedFolder { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(255)]
         public string submitFolder { get; set; }
 
         public DateTime startDate { get; set; }
