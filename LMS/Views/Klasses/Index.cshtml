@@ -37,7 +37,7 @@
             
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.startDate)
+            @Html.DisplayFor(modelItem => item.startDate).ToString().Substring(0, 10)
         </td>
         <td>
             @foreach (var t in item.Students){

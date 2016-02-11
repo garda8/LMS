@@ -1,0 +1,72 @@
+﻿@model LMS.Models.schemaOccasion
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>schemaOccasion</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.klass.TeacherId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.klass.TeacherId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.name_for_schemaoccasion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.name_for_schemaoccasion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.path_to_inlamningsuppgift)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.path_to_inlamningsuppgift)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.startTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.startTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.endTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.endTime)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

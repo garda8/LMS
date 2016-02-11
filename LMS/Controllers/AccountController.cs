@@ -167,7 +167,7 @@ namespace LMS.Controllers
                     var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
                     um.AddToRole(user.Id,userRole);
 
-
+                    
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
@@ -454,8 +454,8 @@ namespace LMS.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
-        }
+            return RedirectToAction("Index", "Klasses");  //Home
+         }
 
         internal class ChallengeResult : HttpUnauthorizedResult
         {

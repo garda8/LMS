@@ -19,6 +19,9 @@ namespace LMS.Models
         public virtual Klass klass { get; set; }
 
 
+        public string name_for_schemaoccasion { get; set; }
+        public string description { get; set; }
+        public string path_to_inlamningsuppgift { get; set; }
         public DateTime startTime { get; set; }
         public DateTime endTime { get; set; }
     }

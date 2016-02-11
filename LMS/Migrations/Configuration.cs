@@ -7,6 +7,7 @@ namespace LMS.Migrations
     using LMS.Models;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.AspNet.Identity;
+    using System.Collections.Generic;
 
 
     internal sealed class Configuration : DbMigrationsConfiguration<LMS.Models.ApplicationDbContext>
@@ -45,7 +46,70 @@ namespace LMS.Migrations
             context.SaveChanges();
             */
 
-            AddUserAndRole(context);
+            IdentityResult ir;
+            //var rm = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            //ir = rm.Create(new IdentityRole("canEdit"));
+
+            var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+
+            /*
+            var user = new User { Name = "Erik", UserName = "erik", Email = "lovbom@gmail.com" };
+            ir = um.Create(user, "password");
+            if (ir.Succeeded == true)
+                ir = um.AddToRole(user.Id, "admin");
+
+            user = new User { Name = "Rolf", UserName = "rolf", Email = "rolf@gmail.com" };
+            ir = um.Create(user, "password");
+            if (ir.Succeeded == true)
+                ir = um.AddToRole(user.Id, "teacher");
+
+            user = new User { Name = "Anna", UserName = "anna", Email = "anna@gmail.com" };
+            ir = um.Create(user, "password");
+            if (ir.Succeeded == true)
+                ir = um.AddToRole(user.Id, "teacher");
+
+            user = new User { Name = "Lisa", UserName = "lisa", Email = "lisa@gmail.com" };
+            ir = um.Create(user, "password");
+            if (ir.Succeeded == true)
+                ir = um.AddToRole(user.Id, "student");
+            */
+
+            Klass myklass = context.Klasser.Find(1); //Kemi A-kurs..
+
+            /*var user = new User { Name = "Lisbet", UserName = "lisbet", Email = "lisbet@gmail.com"};
+            ir = um.Create(user, "password");
+            if (ir.Succeeded == true)
+                ir = um.AddToRole(user.Id, "student");*/
+            
+            User myuser = context.Users.Find("93537f68-4678-4071-9761-b161274d79ab");  //lars
+            if ((myklass != null) && (myuser != null))
+            { 
+                myklass.Students.Add(myuser);
+                myuser.Klasser.Add(myklass);
+            }
+            
+
+            myuser = context.Users.Find("dd258d0a-e4c7-4406-967e-9a12d967c07d");  //leif
+            if ((myklass != null) && (myuser != null))
+            { 
+                myklass.Students.Add(myuser);
+                myuser.Klasser.Add(myklass);
+            }
+            context.SaveChanges(); 
+
+            /*var user = new User { Name = "Leif", UserName = "leif", Email = "leif@gmail.com" };
+            ir = um.Create(user, "password");
+            if (ir.Succeeded == true)
+                ir = um.AddToRole(user.Id, "student");
+
+            user = new User { Name = "Lars", UserName = "lars", Email = "lars@gmail.com" };
+            ir = um.Create(user, "password");
+            if (ir.Succeeded == true)
+                ir = um.AddToRole(user.Id, "student");
+            */
+           
+            //AddUserAndRole(context);
+            
             /*
             if (!context.Users.Any(u => u.UserName == "anna"))
             {

@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.AspNet.Identity.EntityFramework;
 using LMS.ViewModels;
+using System.IO;
 
 namespace LMS.Controllers
 {
@@ -55,6 +56,28 @@ namespace LMS.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult Details(HttpPostedFileBase file, String klassName)
+        {
+
+            if (file.ContentLength > 0)
+            {
+                String Name = User.Identity.Name;
+                
+                var fileName = Path.GetFileName(file.FileName);
+                
+                String strMappath = Server.MapPath("~/Filer/" +klassName +"/submit/"+Name);
+                 if (!Directory.Exists(strMappath))
+                    {
+                        DirectoryInfo di = Directory.CreateDirectory(strMappath);
+                    }                
+                
+                var path = Path.Combine(strMappath, fileName);
+                file.SaveAs(path);
+            }
+
+            return RedirectToAction("Index");
+        }
         // GET: Klasses/Details/5
         public ActionResult Details(int? id)
         {
@@ -62,12 +85,24 @@ namespace LMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Klass klass = db.Klasser.Find(id);
-            if (klass == null)
+            else
             {
-                return HttpNotFound();
+                Klass klass = db.Klasser.Find(id);
+                if (klass == null)
+                {
+                    return HttpNotFound();
+                }
+                int check;
+                if (id.HasValue) check = id.Value;
+                else check = 0;
+                List<User> students = GetUsersInClass(check, "student");
+                ViewBag.students = students;
+
+                List<User> teachers = GetUsersInClass(check, "teacher");
+                ViewBag.teachers = teachers;
+                
+                return View(klass);
             }
-            return View(klass);
         }
 
         // GET: Klasses/Create
@@ -113,6 +148,18 @@ namespace LMS.Controllers
             var role = roleManager.FindByName(roleName).Users.First();
             var usersInRole = db.Users.Where(u => u.Roles.Select(r => r.RoleId).Contains(role.RoleId)).ToList();
             return usersInRole;
+        }
+
+        public List<User> GetUsersInClass(int klassId, string roleName)
+        {
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+            var role = roleManager.FindByName(roleName).Users.First();
+            //var usersInKlass = db.Users.Where(u=>u.Klasser.Select(k=>k.Id).Contains(klassId)).ToList();
+            var usersInKlass = db.Users.Where(u => u.Klasser.Select(k => k.Id).Contains(klassId) && u.Roles.Select(r=>r.RoleId).Contains(role.RoleId)).ToList();
+           
+            //var usersInKlass = db.Users.Where(u=>u.Klasser.Select(k=>k.Id).Contains(klassId) && (u=>u.Roles.Select(r => r.RoleId).Contains(role.RoleId))).ToList();
+           
+            return usersInKlass;
         }
 
 

@@ -1,0 +1,138 @@
+﻿@using LMS.Models;
+@using LMS.ViewModels;
+
+@model LMS.Models.schemaOccasion
+
+
+@{
+    ViewBag.Title = "Details";
+
+    //if (null!=ViewBag.Fil)
+    var fil = (LMS.Models.Fil)ViewBag.Fil;
+    var filer = (List<string>)ViewBag.filer;
+
+    var stasks = (List<StudentsTaskList>)ViewBag.stasks;
+    
+    //var students = (List<User>)ViewBag.students;
+    
+    }
+        <h2>Details</h2>
+
+        <div>
+            <h4>schemaOccasion</h4>
+            <hr />
+
+            <h2>@Html.DisplayFor(model => model.name_for_schemaoccasion) </h2>
+            <dl class="dl-horizontal">
+
+
+                <dt>
+                    Innehåll
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.description)
+                </dd>
+
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.startTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.startTime).ToString().Substring(0,10)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.endTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.endTime).ToString().Substring(0, 10)
+                </dd>
+
+            </dl>
+
+            <h3>Inlämningsuppgift</h3>
+            <table>
+                <tr>
+                    <th>File Name</th>
+                    <th>Link</th>
+                </tr>
+                @if (filer != null) { 
+                for (var i = 0; i <= filer.Count - 1; i++)
+                { 
+                    <tr>
+                        <td>
+                            @filer[i].ToString()
+                        </td>
+                        <td>
+                            @Html.ActionLink("Download", "Download", new { fileName = @filer[i].ToString() })
+                        </td>
+                    </tr>
+                }
+                }
+            </table>
+
+
+
+
+
+
+        </div>
+        @if (Request.IsAuthenticated && User.IsInRole("teacher"))
+{
+            <h3>Studenter</h3>
+            <table>
+                <tr>
+                    <td>Student</td><td>Inlämningar</td><td>Ladda ned</td>
+                </tr>
+                @for (var i = 0; i <= stasks.Count - 1; i++)
+                {
+                    <tr><td>@stasks[i].Name</td><td></td><td></td></tr>
+                    
+                    for (var j = 0; j < stasks[i].filer.Count; j++)
+                    {
+                        <tr><td></td><td>@stasks[i].filer[j].fileName</td><td>@Html.ActionLink("Download", "FileDownload", new { id = @stasks[i].filer[j].Id })</td></tr>        
+                    }   
+                }
+            </table>
+}
+        @if (Request.IsAuthenticated && User.IsInRole("student"))
+    {
+            <h3>Dina inlämningar</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Inlämningar</td>
+                        <td>Kommentar</td>
+                        <td>Betyg</td>
+                    </tr>
+                </thead>
+        @for (var i = 0; i <= stasks.Count - 1; i++)
+        {
+            if (stasks[i].id.Equals(@ViewBag.userId)){
+                for (var j = 0; j < stasks[i].filer.Count; j++)
+                {
+                    <tr><td>@stasks[i].filer[j].fileName</td><td></td><td></td></tr>
+                }
+                }    
+        }
+    </table>
+
+
+            <h3>Ladda upp inlämningsuppgift</h3>
+            <p>Dina inlämningsuppgifter lämnar du in via detta formulär.</p>
+            <form action="" method="post" enctype="multipart/form-data">
+                <label>Uppgift: </label><input type="text" name="uppgift" /><br />
+                <input type="hidden" name="schemaOccasionId" value="@Html.DisplayFor(model => model.Id)" />
+                <label for="file">Filename:</label>
+                <input type="file" name="file" id="file" />
+                <input type="submit" />
+            </form>
+    }
+
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>

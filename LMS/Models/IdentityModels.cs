@@ -34,6 +34,8 @@ namespace LMS.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Klass> Klasser { get; set; }
         public DbSet<schemaOccasion> occasions { get; set; }
+        public DbSet<Fil> Filer { get; set; }
+
         
         
     }
