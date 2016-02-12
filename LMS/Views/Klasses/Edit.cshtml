@@ -1,8 +1,13 @@
 ﻿@model LMS.Models.Klass
-
+@using LMS.Models;
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit";    
+    var selected = (List<User>)ViewBag.selectedStudents;
+    var unselected = (List<User>)ViewBag.unAssignedStudents;
+
 }
+<script src="/Scripts/jquery-2.2.0.js"></script>
+<script src="/Scripts/jquery-ui-1.11.4.js"></script>
 
 <h2>Edit</h2>
 
@@ -10,14 +15,14 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Klass</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
 
-        <input type="hidden" name="klassId" value="@ViewBag.klassId" />
+        <input type="hidden" name="klassId"  id="klassId" value=@ViewBag.klassId />
 
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -51,25 +56,26 @@
             </div>
         </div>
 
-        @if (Request.IsAuthenticated && User.IsInRole("admin")) {
-        <div class="form-group">
-            <h3>Lärare knutna till klassen</h3>
-            @{
+        @if (Request.IsAuthenticated && User.IsInRole("admin"))
+        {
+            <div class="form-group">
+                <h3>Lärare knutna till klassen</h3>
+                @{
 
-                    List<LMS.ViewModels.AssignedTeachersData> teachers = ViewBag.Teachers;
-                    foreach (var teacher in teachers)
-                    {
-                        <input type="checkbox" name="selectedTeachers" value="@teacher.TeacherId" @(Html.Raw(teacher.Assigned ? "checked=\"checked\"" : "")) />
-                        @teacher.Name <br />
-
-                    }
+            List<LMS.ViewModels.AssignedTeachersData> teachers = ViewBag.Teachers;
+            foreach (var teacher in teachers)
+            {
+                <input type="checkbox" name="selectedTeachers" value="@teacher.TeacherId" @(Html.Raw(teacher.Assigned ? "checked=\"checked\"" : "")) />
+                    @teacher.Name <br />
 
             }
-        </div>
-        }    
 
-        
-        
+                }
+            </div>
+        }
+
+
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />
@@ -77,6 +83,44 @@
         </div>
     </div>
 }
+        @if (Request.IsAuthenticated && User.IsInRole("teacher"))
+        {
+            <hr />
+            <table>
+                <tr>
+                    <td width="300px">
+                        <select id="noGroup" name="noGroup" multiple="multiple" size="25">
+                            @foreach(User unsel in unselected) 
+                            {
+                                <option value=@unsel.Id >@unsel.Name </option>
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>
+                                    <input class='buttonEdit' type='button' action='add' id='student' value=' Add--> '><br>
+                                    <input class='buttonEdit' type='button' action='remove' id='student' value='<--Remove'>
+                                </td>
+                                <td>
+                                    <b>Antagna studenter</b><br>
+                                    <select id='groupstudents' name='groupstudents' multiple='multiple' size='5'>
+                                        @foreach(User sel in selected)
+                                        {
+                                            <option value=@sel.Id>@sel.Name </option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        }
+
+        
+
 
 <div>
     @Html.ActionLink("Back to List", "Index")
@@ -85,3 +129,52 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+	$('.buttonEdit').click(function() {
+		var staffId="";
+
+		if ($(this).attr("action")=="add"){
+			$("#noGroup option:selected").each(function() {
+				staffId += $( this ).attr("value") + ",";
+			});
+		}
+		else
+		{
+			$("#groupstudents option:selected").each(function() {
+				staffId += $( this ).attr("value") + ",";
+			});
+		}
+		if (staffId!="")
+		{
+
+			var dataString="klassId="+$("#Id" ).val()+"&students="+staffId+"&action="+$(this).attr("action");
+			
+			var key="";
+			alert(dataString);
+			
+			var serviceURL = '/Klasses/updateKlassStudents?';
+			var key="";
+			$.ajax({
+			    url : serviceURL,
+			    dataType : 'json',
+			    type : "POST",
+			    async : false,
+			    data : dataString,  
+			    success : function(response) {
+			        key = response;
+			        //alert(response);
+			    }
+			});
+			if (key=="OK")
+				location.reload();
+			else
+				alert(key);
+		}
+		else alert("Select a person to add/remove.");
+	});
+});
+</script>
+

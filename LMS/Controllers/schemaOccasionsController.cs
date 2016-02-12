@@ -86,6 +86,23 @@ namespace LMS.Controllers
 
         }*/
 
+        public ActionResult SaveComment(string feedback, int fileId)
+        {
+            Fil fil = db.Filer.Find(fileId);
+            string retval = "Kommentaren är sparad";
+            if (ModelState.IsValid && fil != null)
+            {
+                String currentDate = DateTime.Now.ToShortDateString();
+                fil.TeacherFeedback = feedback + " [" + currentDate + "] ";
+                db.Entry(fil).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            else {
+                retval = "Not saved";
+            }
+            return Json(retval, JsonRequestBehavior.AllowGet);
+            
+        }  
         
         public FilePathResult Download(string fileName)
         {

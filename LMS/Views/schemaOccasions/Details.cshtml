@@ -11,11 +11,15 @@
     var fil = (LMS.Models.Fil)ViewBag.Fil;
     var filer = (List<string>)ViewBag.filer;
 
+    
     var stasks = (List<StudentsTaskList>)ViewBag.stasks;
     
     //var students = (List<User>)ViewBag.students;
     
     }
+<script src="/Scripts/jquery-2.2.0.js"></script>
+<script src="/Scripts/jquery-ui-1.11.4.js"></script>
+
         <h2>Details</h2>
 
         <div>
@@ -81,58 +85,109 @@
 
         </div>
         @if (Request.IsAuthenticated && User.IsInRole("teacher"))
-{
+        {
             <h3>Studenter</h3>
-            <table>
+            <table border="1">
                 <tr>
-                    <td>Student</td><td>Inlämningar</td><td>Ladda ned</td>
+                    <td>Student</td>
+                    <td>Inlämningar</td>
+                    <td>Ladda ned</td>
+                    <td>Kommentar</td>
+                    
                 </tr>
                 @for (var i = 0; i <= stasks.Count - 1; i++)
                 {
-                    <tr><td>@stasks[i].Name</td><td></td><td></td></tr>
-                    
+                    <tr><td>@stasks[i].Name</td>
+                    <td></td>
+                    <td></td>
+                    <td></td></tr>
+
                     for (var j = 0; j < stasks[i].filer.Count; j++)
                     {
-                        <tr><td></td><td>@stasks[i].filer[j].fileName</td><td>@Html.ActionLink("Download", "FileDownload", new { id = @stasks[i].filer[j].Id })</td></tr>        
-                    }   
-                }
+                        <tr>
+                            <td></td>
+                            <td>@stasks[i].filer[j].fileName</td>
+                            <td>@Html.ActionLink("Download", "FileDownload", new { id = @stasks[i].filer[j].Id })</td>
+                            <td>@using (Html.BeginForm())
+                            {<input type="text" size="150" value="@stasks[i].filer[j].TeacherFeedback"  id=@stasks[i].filer[j].Id name=@stasks[i].filer[j].Id />
+                             <input type="button" fileid=@stasks[i].filer[j].Id  class ="btnFeedback" value="Spara" /> 
+                            }</td>
+                            
+                        </tr>
+                   }
+                   /*if(stasks[i].filer.Count==0){
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                   }*/
+               } 
             </table>
 }
         @if (Request.IsAuthenticated && User.IsInRole("student"))
     {
             <h3>Dina inlämningar</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <td>Inlämningar</td>
-                        <td>Kommentar</td>
-                        <td>Betyg</td>
-                    </tr>
-                </thead>
-        @for (var i = 0; i <= stasks.Count - 1; i++)
-        {
-            if (stasks[i].id.Equals(@ViewBag.userId)){
-                for (var j = 0; j < stasks[i].filer.Count; j++)
-                {
-                    <tr><td>@stasks[i].filer[j].fileName</td><td></td><td></td></tr>
-                }
-                }    
-        }
-    </table>
+            
+         
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <td>Inlämningar</td>
+                            <td>Kommentar</td>
+                        </tr>
+                    </thead>
+                    @for (var i = 0; i < stasks.Count; i++)
+                    {
+                        if (stasks[i].id.Equals(@ViewBag.userId))
+                        {
+                            for (var j = 0; j < stasks[i].filer.Count; j++)
+                            {
+                                <tr><td>@stasks[i].filer[j].fileName</td><td>@stasks[i].filer[j].TeacherFeedback</td></tr>
+                            }
+                        }    
+                    }
+                </table>
+        
 
-
-            <h3>Ladda upp inlämningsuppgift</h3>
-            <p>Dina inlämningsuppgifter lämnar du in via detta formulär.</p>
+         <h3>Ladda upp inlämningsuppgift</h3>
+         
             <form action="" method="post" enctype="multipart/form-data">
-                <label>Uppgift: </label><input type="text" name="uppgift" /><br />
                 <input type="hidden" name="schemaOccasionId" value="@Html.DisplayFor(model => model.Id)" />
-                <label for="file">Filename:</label>
-                <input type="file" name="file" id="file" />
-                <input type="submit" />
+                <input type="file" name="file" id="file" /><input type="submit" value="Ladda upp fil"/>
             </form>
     }
 
-        <p>
-            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-            @Html.ActionLink("Back to List", "Index")
-        </p>
+        @if (Request.IsAuthenticated && User.IsInRole("teacher")) 
+        { 
+            <p>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+                @Html.ActionLink("Back to List", "Index")
+            </p>
+        }
+        
+<script>
+    $( ".btnFeedback" ).click(function() {
+        var fileId = $(this).attr("fileid");	
+        var feedback = $("#" + fileId).val();
+        //alert(feedback);
+        
+        var dataString="fileId="+fileId+"&feedback="+feedback;
+        //alert(dataString);
+        var serviceURL = '/schemaOccasions/SaveComment?';
+        var key="";
+        $.ajax({
+            url : serviceURL,
+            dataType : 'json',
+            type : "POST",
+            async : false,
+            data : dataString,  
+            success : function(response) {
+                //key = response["data"];
+                alert(response);
+            }
+        });
+    });
+</script>

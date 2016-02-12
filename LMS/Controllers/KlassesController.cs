@@ -56,6 +56,49 @@ namespace LMS.Controllers
             }
         }
 
+        public ActionResult updateKlassStudents(int klassId, string students, string action) 
+        {
+            Klass klass = db.Klasser.Find(klassId);
+            string retval = "OK"; //"Kommentaren är sparad";
+            
+            if (ModelState.IsValid)
+            {
+                string[] studentArr = students.Split(',');
+                if (action == "remove")
+                {
+                    for (int i = 0; i < studentArr.Length; i++)
+                    {
+                        User user = db.Users.Find(studentArr[i]);
+                        klass.Students.Remove(user);
+                    }
+
+                }
+                else {
+                    for (int i = 0; i < studentArr.Length; i++)
+                    {
+                        User user = db.Users.Find(studentArr[i]);
+                        klass.Students.Add(user);
+                    }
+                
+                }
+                db.Entry(klass).State = EntityState.Modified;
+                db.SaveChanges();
+                 /*String currentDate = DateTime.Now.ToShortDateString();
+                fil.TeacherFeedback = feedback + " [" + currentDate + "] ";
+                db.Entry(fil).State = EntityState.Modified;
+                db.SaveChanges();*/
+            }
+            else
+            {
+                retval = "Not saved";
+            }
+            return Json(retval, JsonRequestBehavior.AllowGet);
+        
+        
+        
+        }
+        
+        
         [HttpPost]
         public ActionResult Details(HttpPostedFileBase file, String klassName)
         {
@@ -177,7 +220,22 @@ namespace LMS.Controllers
             }
 
             PopulateAssignedTeachersData(klass);
-            
+
+            List<User> allStudents = GetUsersInRole("student");
+            List<User> selectedStudents = GetUsersInClass(klass.Id, "student"); 
+            foreach (User student in selectedStudents)
+            {
+                foreach (User allstud in allStudents) {
+                    if (allstud.Id.Equals(student.Id)) {
+                        allStudents.Remove(allstud);
+                        break;
+                    }
+                }
+            }
+
+            ViewBag.selectedStudents = selectedStudents;
+            ViewBag.unAssignedStudents = allStudents;
+
             //ViewBag.TeacherId2 = GetUsersInRole("teacher");
             //ViewBag.TeacherId = new SelectList(db.Users, "Id", "Email", klass.TeacherId);
             return View(klass);
